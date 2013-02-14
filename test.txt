@@ -1,0 +1,49 @@
+#!/bin/csh -f
+set nonomatch
+
+./cleanup.txt >&test.log
+
+#generate Transport Matrice with prefect lattice, and K values for each Energy.
+elegant test01.ele >> test.log
+
+sddsprocess  -pipe=out test01.param -match=col,ElementType=QUAD -match=col,ElementParameter=K1 \
+	| sddsconvert -pipe=in -ascii -delete=col,ElementGroup quad_K1_1000MeV.sdds
+
+sddsprocess quad_K1_1000MeV.sdds -redefine=col,ParameterValue,"ParameterValue 100 * 80 /  " quad_K1_800MeV.sdds
+sddsprocess quad_K1_1000MeV.sdds -redefine=col,ParameterValue,"ParameterValue 100 * 60 /  " quad_K1_600MeV.sdds
+
+elegant test02.ele >> test.log
+elegant test03.ele >> test.log
+
+# sort Transport Matrice for Matlab loading
+sddsconvert -pipe=out -ascii test01.mat  -retain=col,s,ElementName,R* -fromPage=1 -toPage=1 \
+    | sddsprintout -pipe=in -col=* -width=9999 test01.mat1
+sddsconvert -pipe=out -ascii test02.mat  -retain=col,s,ElementName,R* -fromPage=1 -toPage=1 \
+	| sddsprintout -pipe=in -col=* -width=9999 test02.mat1
+sddsconvert -pipe=out -ascii test03.mat  -retain=col,s,ElementName,R* -fromPage=1 -toPage=1 \
+	| sddsprintout -pipe=in -col=* -width=9999 test03.mat1
+
+
+if(-e test03.cen) then
+    echo "********************"
+	echo "Transport Matrice for each Energy is OK."
+    echo "********************"
+else
+	echo "Transport Matrice for each Energy is NOT ok."
+	echo "Please check 'elegant test01-03.ele'!"
+endif
+
+./iteration1.txt >> test.log
+
+if(-e test3.orbit) then
+	echo "Orbits measurement for 1st correction is DONE!"
+    echo "********************"
+endif
+
+echo "Ready for 1st correction!"
+echo "Now you can run 1st correction in Matlab. Run 'flashdfs1.m' ."
+echo "********************"
+
+
+
+
