@@ -26,11 +26,11 @@ status.feedback_gain_factor=0.8;
 status.bpm_noise_level=10e-6;
 
 DFS_correct_1; 
-checkfile([elegant_file_root,'flash_dfs13.orbit']);
-DFS_correct_2;
-checkfile([elegant_file_root,'flash_dfs23.orbit']);
-DFS_correct_3;
-checkfile([elegant_file_root,'flash_dfs33.orbit']);
-DFS_correct_4;
+% checkfile([elegant_file_root,'flash_dfs13.orbit']);
+% DFS_correct_2;
+% checkfile([elegant_file_root,'flash_dfs23.orbit']);
+% DFS_correct_3;
+% checkfile([elegant_file_root,'flash_dfs33.orbit']);
+% DFS_correct_4;
 
 
